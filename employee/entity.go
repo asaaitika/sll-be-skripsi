@@ -1,4 +1,4 @@
-package user
+package employee
 
 import "time"
 
@@ -27,4 +27,5 @@ type Employee struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	EmployeeNik    string
+	BasicSalary    int
 }
