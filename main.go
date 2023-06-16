@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sll-be-skripsi/user"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -22,23 +22,12 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	fmt.Println("connection to database is good")
-
-	var users []user.Employee
-	length := len(users)
-
-	fmt.Println(length)
-
-	db.Find(&users)
-	length = len(users)
-
-	fmt.Println(length)
-
-	for _, user := range users {
-		fmt.Println(user.EmployeeName)
-		fmt.Println(user.EmployeeNik)
-		fmt.Println(user.Address)
-		fmt.Println(user.Email)
-		fmt.Println("=================================")
+	userRepository := user.NewRepository(db)
+	user := user.Employee{
+		EmployeeName:  "test simpan part 2",
+		EndContract:   time.Date(2026, 8, 15, 14, 30, 45, 100, time.Local),
+		BeginContract: time.Now(),
 	}
+
+	userRepository.Save(user)
 }

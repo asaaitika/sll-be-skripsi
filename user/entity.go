@@ -22,7 +22,7 @@ type Employee struct {
 	Password       string
 	EmployeeStatus string
 	EndContract    time.Time
-	BeginContarct  time.Time
+	BeginContract  time.Time
 	IsPermanent    bool
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
