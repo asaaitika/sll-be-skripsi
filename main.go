@@ -29,16 +29,17 @@ func main() {
 	employeeService := employee.NewService(employeeRepository)
 	// authService := auth.NewService()
 
-	employeeByUsername, err := employeeRepository.FindByUsername("johndoem")
+	input := employee.LoginInput{
+		Username: "johndoemc",
+		Password: "test123",
+	}
+	user, err := employeeService.Login(input)
 	if err != nil {
+		fmt.Println("salah euy")
 		fmt.Println(err.Error())
 	}
 
-	if employeeByUsername.EmployeeId == 0 {
-		fmt.Println("user tidak ditemukan")
-	} else {
-		fmt.Println(employeeByUsername.EmployeeName)
-	}
+	fmt.Println(user.Email)
 
 	employeeHandler := handler.NewEmployeeHandler(employeeService)
 
