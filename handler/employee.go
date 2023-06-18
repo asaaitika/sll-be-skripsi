@@ -36,51 +36,51 @@ func (h *employeeHandler) RegisterEmployee(c *gin.Context) {
 		return
 	}
 
-	token, err := h.authService.GenerateToken(newUser.EmployeeId)
-	if err != nil {
-		response := helper.APIResponse("Save data employee failed", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
+	// token, err := h.authService.GenerateToken(newUser.EmployeeId)
+	// if err != nil {
+	// 	response := helper.APIResponse("Save data employee failed", http.StatusBadRequest, "error", nil)
+	// 	c.JSON(http.StatusBadRequest, response)
+	// 	return
+	// }
 
-	formatter := employee.FormatEmployee(newUser, token)
+	formatter := employee.FormatEmployee(newUser, "tokentokentokne")
 
 	response := helper.APIResponse("Data employee has been registered", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 
 }
 
-// func (h *employeeHandler) Login(c *gin.Context) {
-// 	var input employee.LoginInput
+func (h *employeeHandler) Login(c *gin.Context) {
+	var input employee.LoginInput
 
-// 	err := c.ShouldBind(&input)
-// 	if err != nil {
-// 		errors := helper.FormatValidationError(err)
-// 		errorMessage := gin.H{"errors": errors}
+	err := c.ShouldBind(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
 
-// 		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
-// 		c.JSON(http.StatusUnprocessableEntity, response)
-// 		return
-// 	}
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
 
-// 	loggedInUser, err := h.employeeService.Login(input)
-// 	if err != nil {
-// 		errorMessage := gin.H{"errors": err.Error()}
+	loggedInUser, err := h.employeeService.Login(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": err.Error()}
 
-// 		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
-// 		c.JSON(http.StatusUnprocessableEntity, response)
-// 		return
-// 	}
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
 
-// 	token, err := h.authService.GenerateToken(loggedInUser.EmployeeId)
-// 	if err != nil {
-// 		response := helper.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
-// 		c.JSON(http.StatusBadRequest, response)
-// 		return
-// 	}
+	// token, err := h.authService.GenerateToken(loggedInUser.EmployeeId)
+	// if err != nil {
+	// 	response := helper.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
+	// 	c.JSON(http.StatusBadRequest, response)
+	// 	return
+	// }
 
-// 	formatter := employee.FormatEmployee(loggedInUser, token)
+	formatter := employee.FormatEmployee(loggedInUser, "tokentokentoken")
 
-// 	response := helper.APIResponse("Successfully logged in", http.StatusOK, "succes", formatter)
-// 	c.JSON(http.StatusOK, response)
-// }
+	response := helper.APIResponse("Successfully logged in", http.StatusOK, "succes", formatter)
+	c.JSON(http.StatusOK, response)
+}

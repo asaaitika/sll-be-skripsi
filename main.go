@@ -1,16 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"sll-be-skripsi/employee"
+	"sll-be-skripsi/handler"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
 
 func main() {
-	dsn := "root:F!rentia2818@tcp(localhost:3306)/sll_dev?charset=utf8mb4&parseTime=True&loc=Asia%2FJakarta"
+	dsn := "root:F!rentia2818@tcp(localhost:3306)/sll_dev?parseTime=true&loc=Asia%2FJakarta&charset=utf8mb4&collation=utf8mb4_unicode_ci"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
@@ -26,43 +29,28 @@ func main() {
 	employeeService := employee.NewService(employeeRepository)
 	// authService := auth.NewService()
 
-	// employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
+	employeeByUsername, err := employeeRepository.FindByUsername("johndoem")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
-	userInput := employee.RegisterEmployeeInput{}
-	userInput.EmployeeName = "test dr vscode part 3"
-	userInput.Email = ""
-	userInput.Phone = ""
-	userInput.JenisKelamin = ""
-	userInput.City = ""
-	userInput.Province = ""
-	userInput.Address = ""
-	userInput.DivisionId = 0
-	userInput.RoleId = 0
-	userInput.Zip = ""
-	userInput.Password = "test123"
-	userInput.Username = "test"
-	userInput.Image = ""
-	userInput.AcctName = ""
-	userInput.BankAcct = ""
-	userInput.AcctNumber = ""
-	userInput.BasicSalary = 0
-	userInput.BeginContract = "2022-02-02 00:00:00"
-	userInput.EndContract = "2026-02-02 00:00:00"
-	userInput.EmployeeStatus = ""
-	userInput.IsPermanent = false
-	userInput.EmployeeNik = ""
+	if employeeByUsername.EmployeeId == 0 {
+		fmt.Println("user tidak ditemukan")
+	} else {
+		fmt.Println(employeeByUsername.EmployeeName)
+	}
 
-	employeeService.RegisterEmployee(userInput)
+	employeeHandler := handler.NewEmployeeHandler(employeeService)
 
-	// router := gin.Default()
+	router := gin.Default()
 	// router.Use(CORSMiddleware())
 	// router.Static("/images", "./images")
-	// api := router.Group("/api/v1")
+	api := router.Group("/api/v1")
 
-	// api.POST("/employee", employeeHandler.RegisterEmployee)
+	api.POST("/employee", employeeHandler.RegisterEmployee)
 	// api.POST("/sessions", employeeHandler.Login)
 
-	// router.Run()
+	router.Run()
 }
 
 // func authMiddleware(authService auth.Service, employeeService employee.Service) gin.HandlerFunc {

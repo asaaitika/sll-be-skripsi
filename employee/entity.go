@@ -28,4 +28,5 @@ type Employee struct {
 	UpdatedAt      time.Time
 	EmployeeNik    string
 	BasicSalary    int
+	Token          string
 }

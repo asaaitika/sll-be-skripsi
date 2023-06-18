@@ -2,7 +2,6 @@ package employee
 
 import (
 	"errors"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -22,12 +21,7 @@ func NewService(repository Repository) *service {
 }
 
 func (s *service) RegisterEmployee(input RegisterEmployeeInput) (Employee, error) {
-	layoutFormat := "2006-01-02 00:00:00"
-
 	user := Employee{}
-
-	a, _ := time.Parse(layoutFormat, input.BeginContract)
-	b, _ := time.Parse(layoutFormat, input.EndContract)
 
 	user.EmployeeName = input.EmployeeName
 	user.Email = input.Email
@@ -45,8 +39,8 @@ func (s *service) RegisterEmployee(input RegisterEmployeeInput) (Employee, error
 	user.BankAcct = input.BankAcct
 	user.AcctNumber = input.AcctNumber
 	user.BasicSalary = input.BasicSalary
-	user.BeginContract = a
-	user.EndContract = b
+	user.BeginContract = input.BeginContract
+	user.EndContract = input.EndContract
 	user.EmployeeStatus = input.EmployeeStatus
 	user.IsPermanent = input.IsPermanent
 	user.EmployeeNik = input.EmployeeNik
@@ -77,7 +71,7 @@ func (s *service) Login(input LoginInput) (Employee, error) {
 	}
 
 	if user.EmployeeId == 0 {
-		return user, errors.New("no user found on that username")
+		return user, errors.New("no employee found on that username")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
