@@ -2,32 +2,42 @@ package employee
 
 import "time"
 
-type RegisterEmployeeInput struct {
-	EmployeeName   string    `json:"employee_name" binding:"required"`
-	Email          string    `json:"email" binding:"required,email"`
-	Phone          string    `json:"phone" binding:"required"`
-	JenisKelamin   string    `json:"sex"`
-	City           string    `json:"city"`
-	Province       string    `json:"province"`
-	Address        string    `json:"address"`
-	DivisionId     int       `json:"division_id" binding:"required"`
-	RoleId         int       `json:"role_id" binding:"required"`
-	Zip            string    `json:"zip"`
-	Password       string    `json:"password" binding:"required"`
-	Username       string    `json:"username" binding:"required"`
-	Image          string    `json:"image"`
-	AcctName       string    `json:"acct_name"`
-	BankAcct       string    `json:"bank_acct"`
-	AcctNumber     string    `json:"acct_number"`
-	BasicSalary    int       `json:"basic_salary" binding:"required"`
-	BeginContract  time.Time `json:"begin_contract"`
-	EndContract    time.Time `json:"end_contract"`
-	EmployeeStatus string    `json:"employee_status"`
-	IsPermanent    bool      `json:"is_permanent"`
-	EmployeeNik    string    `json:"employee_nik" binding:"required"`
-}
-
 type LoginInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type CreateEmployeeInput struct {
+	EmployeeName   string    `form:"employee_name" binding:"required"`
+	Email          string    `form:"email" binding:"required,email"`
+	Phone          string    `form:"phone" binding:"required"`
+	JenisKelamin   string    `form:"sex"`
+	City           string    `form:"city"`
+	Province       string    `form:"province"`
+	Address        string    `form:"address"`
+	DivisionId     int       `form:"division_id" binding:"required"`
+	RoleId         int       `form:"role_id" binding:"required"`
+	Zip            string    `form:"zip"`
+	Password       string    `form:"password" binding:"required"`
+	Username       string    `form:"username" binding:"required"`
+	AcctName       string    `form:"acct_name"`
+	BankAcct       string    `form:"bank_acct"`
+	AcctNumber     string    `form:"acct_number"`
+	BasicSalary    int       `form:"basic_salary" binding:"required"`
+	BeginContract  time.Time `form:"begin_contract"`
+	EndContract    time.Time `form:"end_contract"`
+	EmployeeStatus string    `form:"employee_status"`
+	IsPermanent    bool      `form:"is_permanent"`
+	EmployeeNik    string    `form:"employee_nik" binding:"required"`
+}
+
+type SearchEmployeeInput struct {
+	EmployeeName   string `form:"employee_name"`
+	EmployeeStatus string `form:"employee_status"`
+	Division       int    `form:"division_id"`
+	Role           int    `form:"role_id"`
+}
+
+type GetEmployeeDetailInput struct {
+	Id int `uri:"id" binding:"required"`
 }

@@ -3,12 +3,18 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"sll-be-skripsi/auth"
 	"sll-be-skripsi/employee"
 	"sll-be-skripsi/handler"
+	"sll-be-skripsi/helper"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -18,6 +24,7 @@ func main() {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	if err != nil {
@@ -27,74 +34,68 @@ func main() {
 	employeeRepository := employee.NewRepository(db)
 
 	employeeService := employee.NewService(employeeRepository)
-	// authService := auth.NewService()
+	authService := auth.NewService()
 
-	input := employee.LoginInput{
-		Username: "johndoemc",
-		Password: "test123",
-	}
-	user, err := employeeService.Login(input)
-	if err != nil {
-		fmt.Println("salah euy")
-		fmt.Println(err.Error())
-	}
-
-	fmt.Println(user.Email)
-
-	employeeHandler := handler.NewEmployeeHandler(employeeService)
+	employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
 
 	router := gin.Default()
 	// router.Use(CORSMiddleware())
-	// router.Static("/images", "./images")
+	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
 
-	api.POST("/employee", employeeHandler.RegisterEmployee)
-	// api.POST("/sessions", employeeHandler.Login)
+	fmt.Println(db.Debug())
+
+	api.POST("/login", employeeHandler.Login)
+	api.POST("/employee", authMiddleware(authService, employeeService), employeeHandler.RegisterEmployee)
+	api.GET("/employee", employeeHandler.ListEmployees)
+	api.GET("/employee/:id", employeeHandler.GetEmployee)
+	api.PUT("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.UpdateEmployee)
+	api.DELETE("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.DeleteEmployee)
 
 	router.Run()
 }
 
-// func authMiddleware(authService auth.Service, employeeService employee.Service) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		authHeader := c.GetHeader("Authorization")
+func authMiddleware(authService auth.Service, employeeService employee.Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
 
-// 		if !strings.Contains(authHeader, "Bearer") {
-// 			res := helper.APIResponse("Unauthorized Bearer", http.StatusUnauthorized, "error", nil)
-// 			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
-// 			return
-// 		}
+		if !strings.Contains(authHeader, "Bearer") {
+			res := helper.APIResponse("Unauthorized Bearer", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			return
+		}
 
-// 		tokenString := ""
-// 		arrayToken := strings.Split(authHeader, " ")
-// 		if len(arrayToken) == 2 {
-// 			tokenString = arrayToken[1]
-// 		}
+		tokenString := ""
+		arrayToken := strings.Split(authHeader, " ")
+		if len(arrayToken) == 2 {
+			tokenString = arrayToken[1]
+		}
 
-// 		token, err := authService.ValidateToken(tokenString)
-// 		if err != nil {
-// 			res := helper.APIResponse("Unauthorized Token", http.StatusUnauthorized, "error", nil)
-// 			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
-// 			return
-// 		}
+		token, err := authService.ValidateToken(tokenString)
+		if err != nil {
+			res := helper.APIResponse("Unauthorized Token", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			return
+		}
 
-// 		claim, ok := token.Claims.(jwt.MapClaims)
-// 		if !ok || !token.Valid {
-// 			res := helper.APIResponse("Unauthorized Okay?", http.StatusUnauthorized, "error", nil)
-// 			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
-// 			return
-// 		}
+		claim, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
+			res := helper.APIResponse("Unauthorized Token", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			return
+		}
 
-// 		userId := int(claim["user_id"].(float64))
-// 		user, err := employeeService.GetUserById(userId)
-// 		if err != nil {
-// 			res := helper.APIResponse("Unauthorized Employee ID", http.StatusUnauthorized, "error", nil)
-// 			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
-// 			return
-// 		}
+		userId := int(claim["employee_id"].(float64))
+		user, err := employeeService.GetUserById(userId)
+		if err != nil {
+			res := helper.APIResponse("Unauthorized Employee ID", http.StatusUnauthorized, "error", nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, res)
+			return
+		}
 
-// 		c.Set("currentUser", user)
-// 	}
-// }
+		c.Set("currentUser", user)
+	}
+}
 
 // func CORSMiddleware() gin.HandlerFunc {
 // 	return func(c *gin.Context) {
