@@ -4,14 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sll-be-skripsi/auth"
 	"sll-be-skripsi/employee"
 	"sll-be-skripsi/handler"
 	"sll-be-skripsi/helper"
 	"strings"
 
+	"database/sql"
+
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -19,8 +24,23 @@ import (
 )
 
 func main() {
-	dsn := "root:F!rentia2818@tcp(localhost:3306)/sll_dev?parseTime=true&loc=Asia%2FJakarta&charset=utf8mb4&collation=utf8mb4_unicode_ci"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+
+	// dsn := "root:F!rentia2818@tcp(localhost:3306)/sll_dev?parseTime=true&loc=Asia%2FJakarta&charset=utf8mb4&collation=utf8mb4_unicode_ci"
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("failed to load env", err)
+	}
+
+	// Open a connection to the database
+	dbConnectionString, err := sql.Open("mysql", os.Getenv("DSN"))
+	if err != nil {
+		log.Fatal("failed to open db connection", err)
+	}
+
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		Conn: dbConnectionString,
+	}), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -39,7 +59,7 @@ func main() {
 	employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
 
 	router := gin.Default()
-	// router.Use(CORSMiddleware())
+	// // router.Use(CORSMiddleware())
 	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
 
