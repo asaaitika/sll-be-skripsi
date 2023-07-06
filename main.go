@@ -59,7 +59,7 @@ func main() {
 	employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
 
 	router := gin.Default()
-	// // router.Use(CORSMiddleware())
+	router.Use(CORSMiddleware())
 	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
 
@@ -72,7 +72,7 @@ func main() {
 	api.PUT("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.UpdateEmployee)
 	api.DELETE("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.DeleteEmployee)
 
-	router.Run()
+	router.Run(":8080")
 }
 
 func authMiddleware(authService auth.Service, employeeService employee.Service) gin.HandlerFunc {
@@ -117,18 +117,18 @@ func authMiddleware(authService auth.Service, employeeService employee.Service) 
 	}
 }
 
-// func CORSMiddleware() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-// 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-// 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-// 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 
-// 		if c.Request.Method == "OPTIONS" {
-// 			c.AbortWithStatus(204)
-// 			return
-// 		}
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 
-// 		c.Next()
-// 	}
-// }
+		c.Next()
+	}
+}
