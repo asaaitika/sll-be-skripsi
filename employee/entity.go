@@ -19,7 +19,7 @@ type Employee struct {
 	Zip            string
 	Image          string
 	Username       string
-	Password       string `gorm:size:256`
+	Password       string
 	EmployeeStatus string
 	EndContract    time.Time
 	BeginContract  time.Time
