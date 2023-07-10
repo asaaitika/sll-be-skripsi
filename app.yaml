@@ -1,4 +1,0 @@
-runtime: go119
-env_variables:
-  DSN: "udtovnqejw1cv2jblrnq:pscale_pw_bskcj0LKQEQZGb7lPKmEnN73r6lYLsadE0GN6HB7yJk@tcp(aws.connect.psdb.cloud)/sll_dev?tls=true&parseTime=true&loc=Asia%2FJakarta"
-  SECRET_KEY: "SM4RTL0CK_s3cr3T_k3Y"
