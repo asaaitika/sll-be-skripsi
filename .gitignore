@@ -3,3 +3,5 @@
 .env.example
 .env.local
 .env.staging
+
+app.yaml
