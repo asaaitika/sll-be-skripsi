@@ -199,12 +199,12 @@ func (h *employeeHandler) UpdateEmployee(c *gin.Context) {
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 
-		response := helper.APIResponse("Save data employee failed", http.StatusBadRequest, "error", errorMessage)
+		response := helper.APIResponse("Update data employee failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := helper.APIResponse("Data employee has been registered", http.StatusOK, "success", employee.FormatEmployee(updateEmployee))
+	response := helper.APIResponse("Data employee has been updated", http.StatusOK, "success", employee.FormatEmployee(updateEmployee))
 	c.JSON(http.StatusOK, response)
 }
 

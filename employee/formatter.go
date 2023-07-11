@@ -38,6 +38,7 @@ type EmployeeFormatter struct {
 	EmployeeStatus string    `json:"employee_status"`
 	IsPermanent    bool      `json:"is_permanent"`
 	EmployeeNik    string    `json:"employee_nik"`
+	TotalCuti      int       `json:"total_cuti"`
 }
 
 func FormatUserInfo(employee Employee, token string) UserInfoFormatter {
@@ -81,6 +82,7 @@ func FormatEmployee(employee Employee) EmployeeFormatter {
 		EmployeeStatus: employee.EmployeeStatus,
 		IsPermanent:    employee.IsPermanent,
 		EmployeeNik:    employee.EmployeeNik,
+		TotalCuti:      employee.TotalCuti,
 	}
 
 	return formatter

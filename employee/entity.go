@@ -29,4 +29,5 @@ type Employee struct {
 	EmployeeNik    string
 	BasicSalary    int
 	Token          string
+	TotalCuti      int
 }

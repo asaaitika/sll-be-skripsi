@@ -9,6 +9,7 @@ import (
 	"sll-be-skripsi/employee"
 	"sll-be-skripsi/handler"
 	"sll-be-skripsi/helper"
+	"sll-be-skripsi/timeoff"
 	"strings"
 
 	"database/sql"
@@ -52,11 +53,14 @@ func main() {
 	}
 
 	employeeRepository := employee.NewRepository(db)
+	timeoffRepository := timeoff.NewRepository(db)
 
 	employeeService := employee.NewService(employeeRepository)
+	timeoffService := timeoff.NewService(timeoffRepository)
 	authService := auth.NewService()
 
 	employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
+	timeoffHandler := handler.NewTimeOffHandler(timeoffService, authService)
 
 	router := gin.Default()
 	router.Use(CORSMiddleware())
@@ -71,6 +75,12 @@ func main() {
 	api.GET("/employee/:id", employeeHandler.GetEmployee)
 	api.PUT("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.UpdateEmployee)
 	api.DELETE("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.DeleteEmployee)
+	api.POST("/timeoff", authMiddleware(authService, employeeService), timeoffHandler.RequestTimeOff)
+	api.GET("/timeoff", authMiddleware(authService, employeeService), timeoffHandler.ListTimeOff)
+	api.GET("/request-timeoff", timeoffHandler.ListRequestTimeOff)
+	api.GET("/timeoff/:id", timeoffHandler.GetTimeOff)
+	api.PUT("/timeoff/:id", authMiddleware(authService, employeeService), timeoffHandler.UpdateRequestTimeOff)
+	api.DELETE("/timeoff/:id", authMiddleware(authService, employeeService), timeoffHandler.DeleteTimeOff)
 
 	router.Run(":8080")
 }
