@@ -65,13 +65,15 @@ func main() {
 	router := gin.Default()
 	router.Use(CORSMiddleware())
 	router.Static("/images", "./images")
+
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "Hello.. Welcome to API Smart Lock Ledger for Skripsi!")
+	})
+
 	api := router.Group("/api/v1")
 
 	fmt.Println(db.Debug())
 
-	api.GET("/", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "Hello.. Welcome to API Smart Lock Ledger for Skripsi!")
-	})
 	api.POST("/login", employeeHandler.Login)
 	api.POST("/employee", authMiddleware(authService, employeeService), employeeHandler.RegisterEmployee)
 	api.GET("/employee", employeeHandler.ListEmployees)
