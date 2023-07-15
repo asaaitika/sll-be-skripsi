@@ -36,8 +36,8 @@ func FormatTimeOff(timeoff TimeOff) TimeOffFormatter {
 	formatter.Reason = timeoff.Reason
 	formatter.File = timeoff.File
 	formatter.EmployeeId = timeoff.EmployeeId
-	formatter.EmployeeName = timeoff.EmployeeName
-	formatter.RoleName = timeoff.RoleName
+	formatter.EmployeeName = timeoff.Employee.EmployeeName
+	formatter.RoleName = timeoff.Role.RoleName
 
 	return formatter
 }

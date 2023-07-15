@@ -1,9 +1,12 @@
 package employee
 
-import "time"
+import (
+	"sll-be-skripsi/attendance"
+	"time"
+)
 
 type Employee struct {
-	EmployeeId     int
+	EmployeeId     int `gorm:"type:int unsigned auto_increment;PRIMARY_KEY" json:"id"`
 	EmployeeName   string
 	Address        string
 	Phone          string
@@ -30,4 +33,5 @@ type Employee struct {
 	BasicSalary    int
 	Token          string
 	TotalCuti      int
+	Attendance     attendance.Attendance `gorm:"foreignKey:EmployeeId"`
 }

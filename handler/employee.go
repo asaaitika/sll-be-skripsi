@@ -50,7 +50,7 @@ func (h *employeeHandler) Login(c *gin.Context) {
 
 	formatter := employee.FormatUserInfo(loggedInUser, token)
 
-	response := helper.APIResponse("Successfully logged in", http.StatusOK, "succes", formatter)
+	response := helper.APIResponse("Successfully logged in", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 }
 

@@ -2,6 +2,7 @@ package employee
 
 import (
 	"database/sql"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -27,8 +28,10 @@ func NewRepository(db *gorm.DB) *repository {
 
 func (r *repository) FindByUsername(userName string) (Employee, error) {
 	var employee Employee
+	now := time.Now()
 
-	err := r.db.Where("username = ?", userName).Find(&employee).Error
+	err := r.db.Where("username = ?", userName).Preload("Attendance", "attendance.attendance_date = ?", now.Format("2006-01-02")).Find(&employee).Error
+
 	if err != nil {
 		return employee, err
 	}

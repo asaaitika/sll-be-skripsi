@@ -2,16 +2,25 @@ package employee
 
 import "time"
 
+type AttendanceFormatter struct {
+	AttendanceId   int    `json:"attendance_id"`
+	AttendanceDate string `json:"attendance_date"`
+	ClockInTime    string `json:"checkin_time"`
+	ClockOutTime   string `json:"checkout_time"`
+}
+
 type UserInfoFormatter struct {
-	EmployeeId   int    `json:"employee_id"`
-	EmployeeNik  string `json:"employee_nik"`
-	EmployeeName string `json:"employee_name"`
-	Username     string `json:"username"`
-	Email        string `json:"email"`
-	DivisionId   int    `json:"division_id"`
-	RoleId       int    `json:"role_id"`
-	Image        string `json:"image"`
-	Token        string `json:"token"`
+	EmployeeId   int                 `json:"employee_id"`
+	EmployeeNik  string              `json:"employee_nik"`
+	EmployeeName string              `json:"employee_name"`
+	Username     string              `json:"username"`
+	Email        string              `json:"email"`
+	DivisionId   int                 `json:"division_id"`
+	RoleId       int                 `json:"role_id"`
+	Image        string              `json:"image"`
+	Token        string              `json:"token"`
+	TotalCuti    int                 `json:"total_cuti"`
+	Attendance   AttendanceFormatter `json:"attendance"`
 }
 
 type EmployeeFormatter struct {
@@ -42,17 +51,28 @@ type EmployeeFormatter struct {
 }
 
 func FormatUserInfo(employee Employee, token string) UserInfoFormatter {
-	formatter := UserInfoFormatter{
-		EmployeeId:   employee.EmployeeId,
-		EmployeeNik:  employee.EmployeeNik,
-		EmployeeName: employee.EmployeeName,
-		Username:     employee.Username,
-		Email:        employee.Email,
-		DivisionId:   employee.DivisionId,
-		RoleId:       employee.RoleId,
-		Image:        employee.Image,
-		Token:        token,
-	}
+	formatter := UserInfoFormatter{}
+
+	formatter.EmployeeId = employee.EmployeeId
+	formatter.EmployeeNik = employee.EmployeeNik
+	formatter.EmployeeName = employee.EmployeeName
+	formatter.Username = employee.Username
+	formatter.Email = employee.Email
+	formatter.DivisionId = employee.DivisionId
+	formatter.RoleId = employee.RoleId
+	formatter.Image = employee.Image
+	formatter.Token = token
+	formatter.TotalCuti = employee.TotalCuti
+
+	data := employee.Attendance
+
+	AttendanceFormatter := AttendanceFormatter{}
+	AttendanceFormatter.AttendanceId = data.AttendanceId
+	AttendanceFormatter.AttendanceDate = data.AttendanceDate
+	AttendanceFormatter.ClockInTime = data.CheckinTime
+	AttendanceFormatter.ClockOutTime = data.CheckoutTime
+
+	formatter.Attendance = AttendanceFormatter
 
 	return formatter
 }

@@ -26,7 +26,19 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) Save(timeoff TimeOff) (TimeOff, error) {
-	err := r.db.Create(&timeoff).Error
+	data := TimeOff{
+		TimeoffType:   timeoff.TimeoffType,
+		TimeoffSaldo:  timeoff.TimeoffSaldo,
+		StartDate:     timeoff.StartDate,
+		EndDate:       timeoff.EndDate,
+		RequestType:   timeoff.RequestType,
+		Reason:        timeoff.Reason,
+		File:          timeoff.File,
+		StatusTimeoff: timeoff.StatusTimeoff,
+		EmployeeId:    timeoff.EmployeeId,
+	}
+
+	err := r.db.Create(&data).Error
 
 	if err != nil {
 		return timeoff, err

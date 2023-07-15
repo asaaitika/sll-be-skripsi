@@ -20,6 +20,8 @@ func NewService(repository Repository) *service {
 func (s *service) CreateRequestTimeOff(input CreateRequestTimeOffInput, file string) (TimeOff, error) {
 	timeoff := TimeOff{}
 
+	// user, err := s.repository.FindById(id)
+
 	timeoff.TimeoffType = input.TimeOffType
 	timeoff.TimeoffSaldo = input.TimeOffSaldo
 	timeoff.StartDate = input.StartDate

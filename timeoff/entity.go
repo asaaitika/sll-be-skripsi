@@ -1,11 +1,12 @@
 package timeoff
 
 import (
+	"sll-be-skripsi/employee"
 	"time"
 )
 
 type TimeOff struct {
-	TimeoffId     int
+	TimeoffId     int `gorm:"type:int unsigned auto_increment;PRIMARY_KEY" json:"id"`
 	TimeoffType   string
 	TimeoffSaldo  string
 	StatusTimeoff string
@@ -18,6 +19,12 @@ type TimeOff struct {
 	File          string
 	Remark        string
 	EmployeeId    int
-	EmployeeName  string
-	RoleName      string
+	Employee      employee.Employee `gorm:"foreignKey:EmployeeId"`
+	Role          Role              `gorm:"foreignKey:RoleId"`
+}
+
+type Role struct {
+	RoleId     int `gorm:"type:int unsigned auto_increment;PRIMARY_KEY" json:"id"`
+	RoleName   string
+	DivisionId int
 }

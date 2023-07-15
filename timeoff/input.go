@@ -9,7 +9,6 @@ type CreateRequestTimeOffInput struct {
 	EndDate       time.Time `form:"end_date"`
 	RequestType   string    `form:"request_type" binding:"required"`
 	Reason        string    `form:"reason"`
-	Remark        string    `form:"remark"`
 	StatusTimeOff string
 	EmployeeId    int
 }

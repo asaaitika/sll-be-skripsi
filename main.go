@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sll-be-skripsi/attendance"
 	"sll-be-skripsi/auth"
 	"sll-be-skripsi/employee"
 	"sll-be-skripsi/handler"
@@ -25,8 +26,6 @@ import (
 )
 
 func main() {
-
-	// dsn := "root:F!rentia2818@tcp(localhost:3306)/sll_dev?parseTime=true&loc=Asia%2FJakarta&charset=utf8mb4&collation=utf8mb4_unicode_ci"
 
 	err := godotenv.Load()
 	if err != nil {
@@ -54,17 +53,21 @@ func main() {
 
 	employeeRepository := employee.NewRepository(db)
 	timeoffRepository := timeoff.NewRepository(db)
+	attendanceRepository := attendance.NewRepository(db)
 
 	employeeService := employee.NewService(employeeRepository)
 	timeoffService := timeoff.NewService(timeoffRepository)
+	attendanceService := attendance.NewService(attendanceRepository)
 	authService := auth.NewService()
 
 	employeeHandler := handler.NewEmployeeHandler(employeeService, authService)
 	timeoffHandler := handler.NewTimeOffHandler(timeoffService, authService)
+	attendanceHandler := handler.NewAttendanceHandler(attendanceService, authService)
 
 	router := gin.Default()
 	router.Use(CORSMiddleware())
 	router.Static("/images", "./images")
+	router.Static("/files", "./files")
 
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Hello.. Welcome to API Smart Lock Ledger for Skripsi!")
@@ -86,6 +89,9 @@ func main() {
 	api.GET("/timeoff/:id", timeoffHandler.GetTimeOff)
 	api.PUT("/timeoff/:id", authMiddleware(authService, employeeService), timeoffHandler.UpdateRequestTimeOff)
 	api.DELETE("/timeoff/:id", authMiddleware(authService, employeeService), timeoffHandler.DeleteTimeOff)
+	api.POST("/attendance", authMiddleware(authService, employeeService), attendanceHandler.CreateClockInAttendance)
+	api.GET("/attendance", authMiddleware(authService, employeeService), attendanceHandler.ListAttendanceLog)
+	api.PUT("/attendance/:id", authMiddleware(authService, employeeService), attendanceHandler.UpdateClockOutAttendance)
 
 	router.Run(":8080")
 }
