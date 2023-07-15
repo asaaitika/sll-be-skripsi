@@ -84,10 +84,7 @@ func (h *timeoffHandler) ListTimeOff(c *gin.Context) {
 		return
 	}
 
-	currentUser := c.MustGet("currentUser").(employee.Employee)
-	employeeId := currentUser.EmployeeId
-
-	timeoffs, err := h.timeoffService.ListTimeOff(input, employeeId)
+	timeoffs, err := h.timeoffService.ListTimeOff(input)
 	if err != nil {
 		response := helper.APIResponse("Error to get time off", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)

@@ -19,9 +19,10 @@ type UpdateStatusTimeOffInput struct {
 }
 
 type SearchTimeOffInput struct {
-	Status string `form:"status"`
-	Month  string `form:"month"`
-	Year   string `form:"year"`
+	EmployeeId int    `form:"employee_id"`
+	Status     string `form:"status"`
+	Month      string `form:"month"`
+	Year       string `form:"year"`
 }
 
 type SearchRequestTimeOffInput struct {

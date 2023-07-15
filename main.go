@@ -84,7 +84,7 @@ func main() {
 	api.PUT("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.UpdateEmployee)
 	api.DELETE("/employee/:id", authMiddleware(authService, employeeService), employeeHandler.DeleteEmployee)
 	api.POST("/timeoff", authMiddleware(authService, employeeService), timeoffHandler.RequestTimeOff)
-	api.GET("/timeoff", authMiddleware(authService, employeeService), timeoffHandler.ListTimeOff)
+	api.GET("/timeoff", timeoffHandler.ListTimeOff)
 	api.GET("/request-timeoff", timeoffHandler.ListRequestTimeOff)
 	api.GET("/timeoff/:id", timeoffHandler.GetTimeOff)
 	api.PUT("/timeoff/:id", authMiddleware(authService, employeeService), timeoffHandler.UpdateRequestTimeOff)

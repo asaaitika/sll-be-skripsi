@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	Save(timeoff TimeOff) (TimeOff, error)
 	FindAllByEmployeeId(id int) ([]TimeOff, error)
-	SearchTimeOff(input SearchTimeOffInput, id int) ([]TimeOff, error)
+	SearchTimeOff(input SearchTimeOffInput) ([]TimeOff, error)
 	FindAll() ([]TimeOff, error)
 	SearchRequestTimeOff(input SearchRequestTimeOffInput) ([]TimeOff, error)
 	FindById(id int) (TimeOff, error)
@@ -62,11 +62,11 @@ func (r *repository) FindAllByEmployeeId(id int) ([]TimeOff, error) {
 	return timeoff, nil
 }
 
-func (r *repository) SearchTimeOff(input SearchTimeOffInput, id int) ([]TimeOff, error) {
+func (r *repository) SearchTimeOff(input SearchTimeOffInput) ([]TimeOff, error) {
 	var timeoff []TimeOff
 
 	rows, err := r.db.Table("vad_time_off").Select("*").
-		Where(r.db.Where("employee_id = ?", id).
+		Where(r.db.Where("employee_id = ?", input.EmployeeId).
 			Where(r.db.Where("@status_timeoff = ''", sql.Named("status_timeoff", input.Status)).Or("status_timeoff = ?", input.Status)).
 			Where(r.db.Where("@month = 0", sql.Named("month", input.Month)).Or("MONTH(start_date) = ?", input.Month)).
 			Where(r.db.Where("@year = 0", sql.Named("year", input.Year)).Or("YEAR(start_date) = ?", input.Year))).

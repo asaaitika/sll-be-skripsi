@@ -2,7 +2,7 @@ package timeoff
 
 type Service interface {
 	CreateRequestTimeOff(input CreateRequestTimeOffInput, file string) (TimeOff, error)
-	ListTimeOff(input SearchTimeOffInput, id int) ([]TimeOff, error)
+	ListTimeOff(input SearchTimeOffInput) ([]TimeOff, error)
 	ListRequestTimeOff(input SearchRequestTimeOffInput) ([]TimeOff, error)
 	GetTimeOffById(input GetTimeOffDetailInput) (TimeOff, error)
 	UpdateRequestTimeOff(inputId GetTimeOffDetailInput, inputData UpdateStatusTimeOffInput) (TimeOff, error)
@@ -40,9 +40,9 @@ func (s *service) CreateRequestTimeOff(input CreateRequestTimeOffInput, file str
 	return newTimeOff, nil
 }
 
-func (s *service) ListTimeOff(input SearchTimeOffInput, id int) ([]TimeOff, error) {
-	if input.Status != "" || input.Month != "" || input.Year != "" {
-		timeoff, err := s.repository.SearchTimeOff(input, id)
+func (s *service) ListTimeOff(input SearchTimeOffInput) ([]TimeOff, error) {
+	if input.EmployeeId != 0 || input.Status != "" || input.Month != "" || input.Year != "" {
+		timeoff, err := s.repository.SearchTimeOff(input)
 		if err != nil {
 			return timeoff, err
 		}
@@ -50,7 +50,7 @@ func (s *service) ListTimeOff(input SearchTimeOffInput, id int) ([]TimeOff, erro
 		return timeoff, nil
 	}
 
-	timeoff, err := s.repository.FindAllByEmployeeId(id)
+	timeoff, err := s.repository.FindAllByEmployeeId(input.EmployeeId)
 	if err != nil {
 		return timeoff, err
 	}
