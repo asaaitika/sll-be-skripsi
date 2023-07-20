@@ -5,8 +5,8 @@ import "time"
 type AttendanceFormatter struct {
 	AttendanceId   int    `json:"attendance_id"`
 	AttendanceDate string `json:"attendance_date"`
-	ClockInTime    string `json:"checkin_time"`
-	ClockOutTime   string `json:"checkout_time"`
+	ClockInTime    string `json:"clockin_time"`
+	ClockOutTime   string `json:"clockout_time"`
 }
 
 type UserInfoFormatter struct {

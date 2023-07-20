@@ -46,6 +46,7 @@ func (r *repository) SearchAttendanceLog(id int, input SearchAttendanceLogInput)
 	var attendances []Attendance
 
 	err := r.db.Where(r.db.Where("employee_id = ?", id).
+		Where(r.db.Where("@id = 0", sql.Named("id", input.Id)).Or("attendance_id = ?", input.Id)).
 		Where(r.db.Where("@start_date = 0", sql.Named("start_date", input.StartDate)).Or("attendance_date = ?", input.StartDate)).
 		Where(r.db.Where("@year = 0", sql.Named("year", input.Year)).Or("YEAR(attendance_date) = ?", input.Year))).
 		Find(&attendances).

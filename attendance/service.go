@@ -34,7 +34,7 @@ func (s *service) ClockInAttendance(id int, input CreateAttendanceInput) (Attend
 }
 
 func (s *service) ListAttendanceLog(id int, input SearchAttendanceLogInput) ([]Attendance, error) {
-	if input.StartDate != "" || input.Year != "" {
+	if input.Id != 0 || input.StartDate != "" || input.Year != "" {
 		attendances, err := s.repository.SearchAttendanceLog(id, input)
 		if err != nil {
 			return attendances, err

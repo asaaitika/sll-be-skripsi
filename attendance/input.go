@@ -13,6 +13,7 @@ type UpdateAttendanceInput struct {
 }
 
 type SearchAttendanceLogInput struct {
+	Id        int    `form:"id"`
 	StartDate string `form:"start_date"`
 	Year      string `form:"year"`
 }
