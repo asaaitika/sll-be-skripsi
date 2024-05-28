@@ -92,7 +92,7 @@ func main() {
 	api.GET("/attendance", authMiddleware(authService, employeeService), attendanceHandler.ListAttendanceLog)
 	api.PUT("/attendance/:id", authMiddleware(authService, employeeService), attendanceHandler.UpdateClockOutAttendance)
 
-	router.Run(":8080")
+	router.Run()
 }
 
 func authMiddleware(authService auth.Service, employeeService employee.Service) gin.HandlerFunc {

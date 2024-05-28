@@ -30,7 +30,7 @@ func (r *repository) FindByUsername(userName string) (Employee, error) {
 	var employee Employee
 	now := time.Now()
 
-	err := r.db.Where("username = ?", userName).Preload("Attendance", "attendance.attendance_date = ?", now.Format("2006-01-02")).Find(&employee).Error
+	err := r.db.Where("username = ?", userName).Preload("Attendance", "attendances.attendance_date = ?", now.Format("2006-01-02")).Find(&employee).Error
 
 	if err != nil {
 		return employee, err
