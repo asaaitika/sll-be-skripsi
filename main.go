@@ -18,6 +18,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -26,10 +27,10 @@ import (
 
 func main() {
 
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("failed to load env", err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("failed to load env", err)
+	}
 
 	// Open a connection to the database
 	dbConnectionString, err := sql.Open("mysql", os.Getenv("DSN"))

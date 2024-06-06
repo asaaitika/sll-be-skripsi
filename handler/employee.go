@@ -54,6 +54,11 @@ func (h *employeeHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+func (h *employeeHandler) Logout(c *gin.Context) {
+	response := helper.APIResponse("Successfully logged out", http.StatusOK, "success", nil)
+	c.JSON(http.StatusOK, response)
+}
+
 func (h *employeeHandler) RegisterEmployee(c *gin.Context) {
 	var input employee.CreateEmployeeInput
 
