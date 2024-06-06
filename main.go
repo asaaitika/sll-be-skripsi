@@ -69,7 +69,7 @@ func main() {
 	router.Static("/files", "./files")
 
 	router.GET("/", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "Hello.. Welcome to API Smart Lock Ledger for Skripsi!")
+		ctx.String(http.StatusOK, "Hello.. Welcome!")
 	})
 
 	api := router.Group("/api/v1")
